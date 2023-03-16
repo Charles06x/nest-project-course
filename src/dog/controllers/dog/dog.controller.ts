@@ -1,5 +1,7 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DogService } from 'src/dog/services/dog/dog.service';
+import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
+import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
 
 @Controller('dog')
 export class DogController {
@@ -21,13 +23,15 @@ export class DogController {
   }
 
   @Post()
-  create(@Body() createDog: any) {
-    return this.dogServiceConstructor.create(createDog.breed, createDog.age, createDog.color)
+  @UsePipes(ValidationPipe)
+  create(@Body() createDog: CreateDogDto) {
+    return this.dogServiceConstructor.create(createDog);
   }
 
   @Patch('/:id')
-  update(@Param('id') id: number, @Body() updateDog: any) {
-    return this.dogServiceConstructor.update(id, updateDog.breed, updateDog.age, updateDog.color)
+  @UsePipes(ValidationPipe)
+  update(@Param('id') id: number, @Body() updateDog: UpdateDogDto) {
+    return this.dogServiceConstructor.update(updateDog, id)
   }
 
   @Delete('/:id')

@@ -1,8 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { DOGS } from 'datasource/dogs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Dog } from 'src/entities';
+import { MoreThanOrEqual, Repository } from 'typeorm';
+import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
+import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
 
 @Injectable()
 export class DogService {
+
+  constructor(
+    @InjectRepository(Dog) private readonly dogRepository: Repository<Dog>,
+  ) {}
 
   findAll() {
     return DOGS;
@@ -36,39 +45,19 @@ export class DogService {
   }
 
 
-  create(breed: string, age: number, color: string) {
-
-    const newDog = {
-      id: DOGS.length,
-      breed,
-      age,
-      color,
-    }
-
-    DOGS.push(newDog);
-
-    return DOGS[DOGS.length - 1];
+  create(createDogDto: CreateDogDto) {
+    const newDog = this.dogRepository.create(createDogDto);
+    return this.dogRepository.save(newDog);
   }
 
-  update(id: number, breed: string, age: number, color: string) {
-    
-    const dogToUpdateIndex = DOGS.findIndex(dog => Number(dog.id === Number(id)))
-
-    const currentDogInfo = DOGS[dogToUpdateIndex]
-    DOGS[dogToUpdateIndex] = {
-      ...DOGS[dogToUpdateIndex],
-      breed: breed ?? currentDogInfo.breed ,
-      age: age ?? currentDogInfo.age,
-      color: color ?? currentDogInfo.color,
-    }
-
-    return DOGS[dogToUpdateIndex]
+  update(updateDog: UpdateDogDto, idDog: number) {
+    return this.dogRepository.save({
+      id: idDog,
+      ...updateDog,
+    })
   }
 
   delete(id: number) {
-    const dogToDeleteIndex = DOGS.findIndex(dog => Number(dog.id === Number(id)))
-    DOGS.splice(dogToDeleteIndex, 1);
-
-    return 'Dog deleted successfully';
+    return this.dogRepository.delete({id})
   }
 }

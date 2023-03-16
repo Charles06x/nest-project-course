@@ -14,29 +14,28 @@ export class DogService {
   ) {}
 
   findAll() {
-    return DOGS;
+    return this.dogRepository.find();
   }
 
-  find(breed: string, age: number): any[] {
-    let filteredDogs = [];
+  find(breed: string, age: number): any {
 
     if(breed && age) {
-      return DOGS.filter((dog) => dog.breed == breed && dog.age >= age);
+      return this.dogRepository.findBy({
+        breed,
+        age
+      });
     } 
 
-    breed
-      ? (filteredDogs = DOGS.filter((dog) => dog.breed == breed))
-      : (filteredDogs = DOGS.filter((dog) => dog.age >= age));
-
-    return filteredDogs;
+    const results = breed ?
+                      this.dogRepository.findBy({breed})
+                      : this.dogRepository.findBy({age});
+    return results;
   }
 
   findOne(dogId: number): any {
 
     try {
-      const [dog] = DOGS.filter((dog) => Number(dog.id) === Number(dogId));
-  
-      return dog;
+      return this.dogRepository.findOneBy({id: dogId})
     } catch (error) {
       return {
         msg: 'Something went wrong. Try later.'

@@ -2,13 +2,15 @@ import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, Val
 import { DogService } from 'src/dog/services/dog/dog.service';
 import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
 import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
+import { FindDogDto } from 'src/dog/dto/find-dog.dto';
 
 @Controller('dog')
 export class DogController {
   constructor(private dogServiceConstructor: DogService) {}
 
   @Get()
-  find(@Query() qParams: any) {
+  @UsePipes(ValidationPipe)
+  find(@Query() qParams: FindDogDto) {
     const {breed, age} = qParams;
     if(breed || age) {
       return this.dogServiceConstructor.find(breed, age)

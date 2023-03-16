@@ -3,13 +3,33 @@ import { DogService } from 'src/dog/services/dog/dog.service';
 import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
 import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
 import { FindDogDto } from 'src/dog/dto/find-dog.dto';
+import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { DogDto } from 'src/dog/dto/dog.dto';
 
+@ApiTags('Dog')
 @Controller('dog')
 export class DogController {
   constructor(private dogServiceConstructor: DogService) {}
 
   @Get()
-  @UsePipes(ValidationPipe)
+    @ApiQuery({
+      name: 'breed',
+      type: String,
+      description: 'The breed of the dog',
+      required: false,
+    })
+    @ApiQuery({
+      name: 'age',
+      type: Number,
+      description: 'The age of the dog',
+      required: false,
+    })
+    @ApiOkResponse({
+      description: 'The Dogs records',
+      type: DogDto,
+      isArray: true,
+    })
+    @UsePipes(ValidationPipe)
   find(@Query() qParams: FindDogDto) {
     const {breed, age} = qParams;
     if(breed || age) {

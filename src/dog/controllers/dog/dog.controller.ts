@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DogService } from 'src/dog/services/dog/dog.service';
 import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
-import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
+import { UpdateDogDto, UpdateDogResponseDto } from 'src/dog/dto/update-dog.dto';
 import { FindDogDto } from 'src/dog/dto/find-dog.dto';
-import { ApiOkResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { DogDto } from 'src/dog/dto/dog.dto';
 
 @ApiTags('Dog')
@@ -40,23 +40,56 @@ export class DogController {
   }
 
   @Get(':id')
+    @ApiParam({
+      name: 'id',
+      type: Number,
+      description: 'Id of the dog to search.'
+    })
+    @ApiOkResponse({
+      description: 'Found dog',
+      type: DogDto,
+      isArray: false,
+    })
   findSingleDog(@Param('id') id: number) {
     return this.dogServiceConstructor.findOne(id);
   }
 
   @Post()
-  @UsePipes(ValidationPipe)
+    @ApiOkResponse({
+      type: DogDto,
+      description: 'Created Dog.',
+    })
+    @UsePipes(ValidationPipe)
   create(@Body() createDog: CreateDogDto) {
     return this.dogServiceConstructor.create(createDog);
   }
 
   @Patch('/:id')
-  @UsePipes(ValidationPipe)
+    @ApiParam({
+      name: 'id',
+      description: 'Id of the dog to update',
+      type: Number,
+    })
+    @ApiOkResponse({
+      description: 'Updated info',
+      type: UpdateDogResponseDto,
+    })
+    @UsePipes(ValidationPipe)
   update(@Param('id') id: number, @Body() updateDog: UpdateDogDto) {
     return this.dogServiceConstructor.update(updateDog, id)
   }
 
   @Delete('/:id')
+    @ApiParam({
+      name: 'id',
+      type: Number,
+      description: 'The Id of the dog to delete.',
+    })
+    @ApiOkResponse({
+      type: String,
+      description: 'Response',
+      
+    })
   delete(@Param('id') id: number) {
     return this.dogServiceConstructor.delete(id);
   }

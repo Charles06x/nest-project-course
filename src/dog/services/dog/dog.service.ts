@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { DOGS } from 'datasource/dogs';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Dog } from 'src/entities';
-import { MoreThanOrEqual, Repository } from 'typeorm';
-import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
+import { Repository } from 'typeorm';
+import { CreateDogDto, CreateDogPayloadDto } from 'src/dog/dto/create-dog.dto';
 import { UpdateDogDto } from 'src/dog/dto/update-dog.dto';
+import { OwnersService } from 'src/owners/services/owners/owners.service';
 
 @Injectable()
 export class DogService {
 
   constructor(
     @InjectRepository(Dog) private readonly dogRepository: Repository<Dog>,
+    @Inject(OwnersService) private readonly ownersService: OwnersService,
   ) {}
 
   findAll() {
@@ -44,8 +45,23 @@ export class DogService {
   }
 
 
-  create(createDogDto: CreateDogDto) {
-    const newDog = this.dogRepository.create(createDogDto);
+  async create(createDogDto: CreateDogPayloadDto) {
+    const { owner } = createDogDto;
+
+    const foundOwner = await this.ownersService.findOne(owner);
+
+    const dogInfo: CreateDogDto = {
+      ...createDogDto,
+      owner: foundOwner
+    }
+
+    if(!foundOwner) {
+      return {
+        msg: 'A valid owner should be provided, to create a dog.'
+      }
+    }
+
+    const newDog = this.dogRepository.create(dogInfo);
     return this.dogRepository.save(newDog);
   }
 

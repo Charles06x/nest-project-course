@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DogModule } from './dog/dog.module';
+import { OwnersModule } from './owners/owners.module';
+import { OwnersController } from './owners/controllers/owners/owners.controller';
 import entities from './entities';
 
 @Module({
@@ -23,9 +25,11 @@ import entities from './entities';
       }),
       inject: [ConfigService],
     }),
-    DogModule
+    DogModule,
+    OwnersModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
+
 export class AppModule {}

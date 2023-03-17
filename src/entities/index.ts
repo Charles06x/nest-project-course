@@ -1,8 +1,10 @@
 import { Dog } from "./dog.entity";
+import { Owners } from "./owners.entity";
 
 const entities = [
   Dog,
+  Owners
 ]
 
-export { Dog };
+export { Dog, Owners };
 export default entities;

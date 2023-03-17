@@ -1,7 +1,7 @@
 import { IsNumber, IsString, ValidateIf } from 'class-validator';
 
 export class FindDogDto {
-  @ValidateIf(dog => dog.value)
+  @ValidateIf(dog => dog.age)
   @IsNumber()
   age: number | null;
 

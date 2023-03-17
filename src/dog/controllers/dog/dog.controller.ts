@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { DogService } from 'src/dog/services/dog/dog.service';
-import { CreateDogDto } from 'src/dog/dto/create-dog.dto';
+import { CreateDogDto, CreateDogPayloadDto } from 'src/dog/dto/create-dog.dto';
 import { UpdateDogDto, UpdateDogResponseDto } from 'src/dog/dto/update-dog.dto';
 import { FindDogDto } from 'src/dog/dto/find-dog.dto';
 import { ApiBody, ApiOkResponse, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
@@ -60,7 +60,7 @@ export class DogController {
       description: 'Created Dog.',
     })
     @UsePipes(ValidationPipe)
-  create(@Body() createDog: CreateDogDto) {
+  create(@Body() createDog: CreateDogPayloadDto) {
     return this.dogServiceConstructor.create(createDog);
   }
 
@@ -88,7 +88,7 @@ export class DogController {
     @ApiOkResponse({
       type: String,
       description: 'Response',
-      
+
     })
   delete(@Param('id') id: number) {
     return this.dogServiceConstructor.delete(id);

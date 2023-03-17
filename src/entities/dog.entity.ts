@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Owners } from './owners.entity';
 
 @Entity()
 export class Dog {
@@ -26,4 +27,6 @@ export class Dog {
   })
   color: string;
 
+  @ManyToOne(() => Owners, (owners) => owners.dog)
+  owner: Owners
 }

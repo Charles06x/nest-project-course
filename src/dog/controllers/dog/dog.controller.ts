@@ -20,9 +20,9 @@ export class DogController {
     return this.dogServiceConstructor.create(createDog.breed, createDog.age, createDog.color)
   }
 
-  @Patch()
-  update(@Body() updateDog: any) {
-    return this.dogServiceConstructor.update(updateDog.id, updateDog.breed, updateDog.age, updateDog.color)
+  @Patch('/:id')
+  update(@Param('id') id: number, @Body() updateDog: any) {
+    return this.dogServiceConstructor.update(id, updateDog.breed, updateDog.age, updateDog.color)
   }
 
   @Delete('/:id')

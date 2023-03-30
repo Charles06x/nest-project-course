@@ -7,11 +7,11 @@ export class DogService {
   }
 
   findOne(dogId: number): string {
-    return `findOne is working, and the dogID is ${dogId}`;
+    return `findOne is working, and the dogId parameter is ${dogId}`;
   }
 
   create(breed: string, age: number, color: string) {
-    return `create function with properties, breed: ${breed}, age: ${age} &  color: ${color}`;
+    return `create function with properties, breed: ${breed}, age: ${age} & color: ${color}`;
   }
 
   update(id: number, breed: string, age: number, color: string) {
@@ -19,7 +19,7 @@ export class DogService {
     properties = breed ? properties + `breed: ${breed}` : properties;
     properties = age ? properties + `age: ${age}` : properties;
     properties = color ? properties + `color: ${color}` : properties;
-    return `update function dog with id: ${id}, ${properties}`;
+    return `update function dog with id: ${id} & property, ${properties}`;
   }
 
   delete(id) {
